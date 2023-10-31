@@ -35,7 +35,7 @@
                     if (commandLine.Length < 2)
                     {
                         lastFileName = "address.lis";
-                        using (StreamReader infile = new StreamReader(lastFileName))
+                        using (StreamReader infile = new StreamReader(lastFileName))  //TODO felhantering vid fel filnamn
                         {
                             string line;
                             while ((line = infile.ReadLine()) != null)
