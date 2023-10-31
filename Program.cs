@@ -12,15 +12,7 @@
             string lastFileName = "address.lis";
             string[] commandLine;
             Console.WriteLine("Hello and welcome to the contact list");
-            Console.WriteLine("Avaliable commands: ");
-            Console.WriteLine("  load        - load contact list data from the file address.lis");
-            Console.WriteLine("  load /file/ - load contact list data from the file");
-            Console.WriteLine("  new        - create new person");
-            Console.WriteLine("  new /persname/ /surname/ - create new person with personal name and surname");
-            Console.WriteLine("  quit        - quit the program");
-            Console.WriteLine("  save         - save contact list data to the file previously loaded");
-            Console.WriteLine("  save /file/ - save contact list data to the file");
-            Console.WriteLine();
+            MenuPrinter();
             do
             {
                 Console.Write($"> ");
@@ -35,6 +27,8 @@
                     if (commandLine.Length < 2)
                     {
                         lastFileName = "address.lis";
+
+
                         using (StreamReader infile = new StreamReader(lastFileName))  //TODO felhantering vid fel filnamn
                         {
                             string line;
@@ -59,34 +53,44 @@
                                 }
                             }
                         }
+
                     }
+
                     else
                     {
                         lastFileName = commandLine[1];
-                        using (StreamReader infile = new StreamReader(lastFileName))
+                        try
                         {
-                            string line;
-                            while ((line = infile.ReadLine()) != null)
+                            using (StreamReader infile = new StreamReader(lastFileName))
                             {
-                                Console.WriteLine(line);
-                                string[] attrs = line.Split('|');
-                                Person p = new Person();
-                                p.persname = attrs[0];
-                                p.surname = attrs[1];
-                                string[] phones = attrs[2].Split(';');
-                                p.phone = phones[0];
-                                string[] addresses = attrs[3].Split(';');
-                                p.address = addresses[0];
-                                for (int ix = 0; ix < contactList.Length; ix++)
+                                string line;
+                                while ((line = infile.ReadLine()) != null)
                                 {
-                                    if (contactList[ix] == null)
+                                    Console.WriteLine(line);
+                                    string[] attrs = line.Split('|');
+                                    Person p = new Person();
+                                    p.persname = attrs[0];
+                                    p.surname = attrs[1];
+                                    string[] phones = attrs[2].Split(';');
+                                    p.phone = phones[0];
+                                    string[] addresses = attrs[3].Split(';');
+                                    p.address = addresses[0];
+                                    for (int ix = 0; ix < contactList.Length; ix++)
                                     {
-                                        contactList[ix] = p;
-                                        break;
+                                        if (contactList[ix] == null)
+                                        {
+                                            contactList[ix] = p;
+                                            break;
+                                        }
                                     }
                                 }
                             }
                         }
+                        catch (System.IO.FileNotFoundException exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                        }
+
                     }
                 }
                 else if (commandLine[0] == "save")
@@ -144,6 +148,19 @@
                     Console.WriteLine($"Unknown command: '{commandLine[0]}'");
                 }
             } while (commandLine[0] != "quit");
+
+            static void MenuPrinter()
+            {
+                Console.WriteLine("Avaliable commands: ");
+                Console.WriteLine("  load        - load contact list data from the file address.lis");
+                Console.WriteLine("  load /file/ - load contact list data from the file");
+                Console.WriteLine("  new        - create new person");
+                Console.WriteLine("  new /persname/ /surname/ - create new person with personal name and surname");
+                Console.WriteLine("  quit        - quit the program");
+                Console.WriteLine("  save         - save contact list data to the file previously loaded");
+                Console.WriteLine("  save /file/ - save contact list data to the file");
+                Console.WriteLine();
+            }
         }
     }
 }
