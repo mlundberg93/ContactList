@@ -24,26 +24,11 @@
                 }
                 else if (commandLine[0] == "load")
                 {
-                    lastFileName = LoadList(commandLine);
+                    lastFileName = LoadFile(commandLine);
                 }
                 else if (commandLine[0] == "save")
                 {
-                    if (commandLine.Length < 2)
-                    {
-                        using (StreamWriter outfile = new StreamWriter(lastFileName))
-                        {
-                            foreach (Person p in contactList)
-                            {
-                                if (p != null)
-                                    outfile.WriteLine($"{p.persname};{p.surname};{p.phone};{p.address};{p.birthdate}");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // NYI!
-                        Console.WriteLine("Not yet implemented: save /file/");
-                    }
+                    SaveFunction(lastFileName, commandLine);
                 }
                 else if (commandLine[0] == "new")
                 {
@@ -85,9 +70,28 @@
                 Console.WriteLine();
             } //En metod för att samla ihop då den används på mer än ett ställe.
 
+            static void SaveFunction(string lastFileName, string[] commandLine)
+            {
+                if (commandLine.Length < 2)
+                {
+                    using (StreamWriter outfile = new StreamWriter(lastFileName))
+                    {
+                        foreach (Person p in contactList)
+                        {
+                            if (p != null)
+                                outfile.WriteLine($"{p.persname};{p.surname};{p.phone};{p.address};{p.birthdate}");
+                        }
+                    }
+                }
+                else
+                {
+                    // NYI!
+                    Console.WriteLine("Not yet implemented: save /file/");
+                }
+            }
         }
 
-        private static string LoadList(string[] commandLine)
+        private static string LoadFile(string[] commandLine)
         {
             string lastFileName;
             if (commandLine.Length < 2)
