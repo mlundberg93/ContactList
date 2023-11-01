@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 
 namespace dtp6_contacts
 {
@@ -36,9 +37,9 @@ namespace dtp6_contacts
 
 
                 //NYI List Person, skriv ut personer med samma namn-
-                //NYI Delete, ska rensa hela listan.
+
                 //NYI Delete Person, ska ta bort en person från listan.
-                //NYI Edit Person, redigera en person i listan.
+
                 //NYI Save File, spara listan på angiven fil.
                 //NYI Safe Quit, om filen inte är sparad, ska programmet fråga om spara innan avslut.
                 else if (commandLine[0] == "list")
@@ -71,6 +72,18 @@ namespace dtp6_contacts
                 {
                     AddPerson(commandLine);
                 }
+                else if (commandLine[0] == "delete")
+                {
+                    Array.Clear(contactList, 0, contactList.Length);
+                    Console.WriteLine("The list has now been deleted!");
+                }
+                else if (commandLine[0] == "edit")
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = @"D:\IT\Notepad++\notepad++.exe";
+                    startInfo.Arguments = @"C:\Users\marcu\source\repos\TomasKindahl\dtp6_contacts\bin\Debug\net6.0\address.lis";
+                    Process.Start(startInfo);
+                }
                 else if (commandLine[0] == "help")
                 {
                     MenuPrinter();
@@ -96,10 +109,12 @@ namespace dtp6_contacts
             Console.WriteLine("  load        - load contact list data from the file address.lis");
             Console.WriteLine("  load /file/ - load contact list data from the file");
             Console.WriteLine("  list        - prints the list with all the persons");
-            Console.WriteLine("  new        - create new person");
+            Console.WriteLine("  new         - create new person");
+            Console.WriteLine("  delete      - deletes the entire list");
+            Console.WriteLine("  edit        - opens the file with an editor");
             Console.WriteLine("  new /persname/ /surname/ - create new person with personal name and surname");
             Console.WriteLine("  quit        - quit the program");
-            Console.WriteLine("  save         - save contact list data to the file previously loaded");
+            Console.WriteLine("  save        - save contact list data to the file previously loaded");
             Console.WriteLine("  save /file/ - save contact list data to the file");
             Console.WriteLine();
         } //En metod för att samla ihop då den används på mer än ett ställe.
