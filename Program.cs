@@ -72,17 +72,13 @@ namespace dtp6_contacts
                 {
                     AddPerson(commandLine);
                 }
-                else if (commandLine[0] == "delete")
+                else if (commandLine[0] == "delete") //"delete person"
                 {
-                    Array.Clear(contactList, 0, contactList.Length);
-                    Console.WriteLine("The list has now been deleted!");
+                    DeleteFunction(commandLine);
                 }
                 else if (commandLine[0] == "edit")
                 {
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = @"D:\IT\Notepad++\notepad++.exe";
-                    startInfo.Arguments = @"C:\Users\marcu\source\repos\TomasKindahl\dtp6_contacts\bin\Debug\net6.0\address.lis";
-                    Process.Start(startInfo);
+                    EditPerson();
                 }
                 else if (commandLine[0] == "help")
                 {
@@ -94,13 +90,59 @@ namespace dtp6_contacts
                 }
             } while (commandLine[0] != "quit"); //Här avbryts REPL, programmet stängs av.
         }
+
+        private static void DeleteFunction(string[] commandLine)
+        {
+            if (commandLine.Length == 1)
+            {
+                Array.Clear(contactList);
+                Console.WriteLine("The list has now been deleted!");
+            }
+            else //"Delete person"
+            {
+                Console.WriteLine("Type the number of the person you want to delete");
+                int userInput = int.Parse(Console.ReadLine());
+                contactList[userInput] = null;
+            }
+        }
+
+        private static void EditPerson()
+        {
+            Console.WriteLine("Enter the number of the person you want to edit");
+            int userInput = int.Parse(Console.ReadLine());
+            Console.WriteLine("Type the new name, if you don't want to change the name press enter");
+            string newName = Console.ReadLine();
+            if (newName != "")
+            {
+                contactList[userInput].persname = newName;
+            }
+            Console.WriteLine("Type the new surname, if you don't want to change it press enter");
+            string newSurname = Console.ReadLine();
+            if (newSurname != "")
+            {
+                contactList[userInput].surname = newSurname;
+            }
+            Console.WriteLine("Type the new phone number, if you don't want to change it press enter");
+            string newPhone = Console.ReadLine();
+            if (newPhone != "")
+            {
+                contactList[userInput].phone = newPhone;
+            }
+            Console.WriteLine("Type the new address, if you don't want to change it press enter");
+            string newAddress = Console.ReadLine();
+            if (newAddress != "")
+            {
+                contactList[userInput].address = newAddress;
+            }
+        }
+
         static void PrintList()
         {
             for (int i = 0; i < contactList.Length; i++)
             {
                 Person p = contactList[i];
                 if (p != null)
-                Console.WriteLine($"{p.persname}, {p.surname}, {p.phone}, {p.address}, {p.birthdate}");
+                Console.WriteLine($"{i}. {p.persname}, {p.surname}, {p.phone}, {p.address}, {p.birthdate}");
             }
         }//Metod för att printa ut listan.
         static void MenuPrinter()
@@ -111,6 +153,7 @@ namespace dtp6_contacts
             Console.WriteLine("  list        - prints the list with all the persons");
             Console.WriteLine("  new         - create new person");
             Console.WriteLine("  delete      - deletes the entire list");
+            Console.WriteLine("  index delete    - deletes the person from the list");
             Console.WriteLine("  edit        - opens the file with an editor");
             Console.WriteLine("  new /persname/ /surname/ - create new person with personal name and surname");
             Console.WriteLine("  quit        - quit the program");
