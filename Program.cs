@@ -13,7 +13,7 @@
             string[] commandLine;
             Console.WriteLine("Hello and welcome to the contact list");
             MenuPrinter();
-            do
+            do //REPL: programmets kärna som går runt i en loop tills den avslutas.
             {
                 Console.Write($"> ");
                 commandLine = Console.ReadLine().Split(' ');
@@ -32,20 +32,7 @@
                 }
                 else if (commandLine[0] == "new")
                 {
-                    if (commandLine.Length < 2)
-                    {
-                        Console.Write("personal name: ");
-                        string persname = Console.ReadLine();
-                        Console.Write("surname: ");
-                        string surname = Console.ReadLine();
-                        Console.Write("phone: ");
-                        string phone = Console.ReadLine();
-                    }
-                    else
-                    {
-                        // NYI!
-                        Console.WriteLine("Not yet implemented: new /person/");
-                    }
+                    AddPerson(commandLine);
                 }
                 else if (commandLine[0] == "help")
                 {
@@ -55,7 +42,7 @@
                 {
                     Console.WriteLine($"Unknown command: '{commandLine[0]}'");
                 }
-            } while (commandLine[0] != "quit");
+            } while (commandLine[0] != "quit"); //Här avbryts REPL, programmet stängs av.
 
             static void MenuPrinter()
             {
@@ -70,7 +57,7 @@
                 Console.WriteLine();
             } //En metod för att samla ihop då den används på mer än ett ställe.
 
-            static void SaveFunction(string lastFileName, string[] commandLine)
+            static void SaveFunction(string lastFileName, string[] commandLine) 
             {
                 if (commandLine.Length < 2)
                 {
@@ -88,8 +75,31 @@
                     // NYI!
                     Console.WriteLine("Not yet implemented: save /file/");
                 }
-            }
+            }//En metod för att spara kontaktlistan
         }
+        static string Input(string prompt)
+        {
+            Console.Write(prompt);
+            return Console.ReadLine();
+        }
+
+        private static void AddPerson(string[] commandLine)
+        {
+            if (commandLine.Length < 2)
+            {
+
+                string persname = Input("Personal name: ");
+
+                string surname = Input("Surname: ");
+
+                string phone = Input("Phone: ");
+            }
+            else
+            {
+                // NYI!
+                Console.WriteLine("Not yet implemented: new /person/");
+            }
+        }//En metod för att lägga till en ny kontakt
 
         private static string LoadFile(string[] commandLine)
         {
@@ -163,6 +173,6 @@
             }
 
             return lastFileName;
-        }
+        }//En metod för att ladda in listan till programmet.
     }
 }
