@@ -15,13 +15,20 @@
             MenuPrinter();
             do //REPL: programmets kärna som går runt i en loop tills den avslutas.
             {
-                Console.Write($"> ");
-                commandLine = Console.ReadLine().Split(' ');
+                commandLine = Input("> ").Split(' ');
                 if (commandLine[0] == "quit")
                 {
                     // NYI!
                     Console.WriteLine("Not yet implemented: safe quit");
                 }
+                //NYI New Person, skapar person med namn
+                //NYI List, ska skriva ut hela listan.
+                //NYI List Person, skriv ut personer med samma namn-
+                //NYI Delete, ska rensa hela listan.
+                //NYI Delete Person, ska ta bort en person från listan.
+                //NYI Edit Person, redigera en person i listan.
+                //NYI Save File, spara listan på angiven fil.
+                //NYI Safe Quit, om filen inte är sparad, ska programmet fråga om spara innan avslut.
                 else if (commandLine[0] == "load")
                 {
                     lastFileName = LoadFile(commandLine);
@@ -77,7 +84,7 @@
                 }
             }//En metod för att spara kontaktlistan
         }
-        static string Input(string prompt)
+        static string Input(string prompt) //Metod för att korta ner rader med återkommande kod om utskrifter
         {
             Console.Write(prompt);
             return Console.ReadLine();
@@ -87,13 +94,10 @@
         {
             if (commandLine.Length < 2)
             {
-
                 string persname = Input("Personal name: ");
-
                 string surname = Input("Surname: ");
-
                 string phone = Input("Phone: ");
-            }
+            } //NYI: Lägg till i telefon listan
             else
             {
                 // NYI!
