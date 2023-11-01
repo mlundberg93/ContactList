@@ -22,13 +22,17 @@
                     Console.WriteLine("Not yet implemented: safe quit");
                 }
                 //NYI New Person, skapar person med namn
-                //NYI List, ska skriva ut hela listan.
+
                 //NYI List Person, skriv ut personer med samma namn-
                 //NYI Delete, ska rensa hela listan.
                 //NYI Delete Person, ska ta bort en person från listan.
                 //NYI Edit Person, redigera en person i listan.
                 //NYI Save File, spara listan på angiven fil.
                 //NYI Safe Quit, om filen inte är sparad, ska programmet fråga om spara innan avslut.
+                else if (commandLine[0] == "list")
+                {
+                    PrintList();
+                }
                 else if (commandLine[0] == "load")
                 {
                     if (commandLine.Length < 2)
@@ -64,22 +68,29 @@
                     Console.WriteLine($"Unknown command: '{commandLine[0]}'");
                 }
             } while (commandLine[0] != "quit"); //Här avbryts REPL, programmet stängs av.
-
-            static void MenuPrinter()
-            {
-                Console.WriteLine("Avaliable commands: ");
-                Console.WriteLine("  load        - load contact list data from the file address.lis");
-                Console.WriteLine("  load /file/ - load contact list data from the file");
-                Console.WriteLine("  new        - create new person");
-                Console.WriteLine("  new /persname/ /surname/ - create new person with personal name and surname");
-                Console.WriteLine("  quit        - quit the program");
-                Console.WriteLine("  save         - save contact list data to the file previously loaded");
-                Console.WriteLine("  save /file/ - save contact list data to the file");
-                Console.WriteLine();
-            } //En metod för att samla ihop då den används på mer än ett ställe.
-
-
         }
+        static void PrintList()
+        {
+            for (int i = 0; i < contactList.Length; i++)
+            {
+                Person p = contactList[i];
+                if (p != null)
+                Console.WriteLine($"{p.persname}, {p.surname}, {p.phone}, {p.address}, {p.birthdate}");
+            }
+        }//Metod för att printa ut listan.
+        static void MenuPrinter()
+        {
+            Console.WriteLine("Avaliable commands: ");
+            Console.WriteLine("  load        - load contact list data from the file address.lis");
+            Console.WriteLine("  load /file/ - load contact list data from the file");
+            Console.WriteLine("  list        - prints the list with all the persons");
+            Console.WriteLine("  new        - create new person");
+            Console.WriteLine("  new /persname/ /surname/ - create new person with personal name and surname");
+            Console.WriteLine("  quit        - quit the program");
+            Console.WriteLine("  save         - save contact list data to the file previously loaded");
+            Console.WriteLine("  save /file/ - save contact list data to the file");
+            Console.WriteLine();
+        } //En metod för att samla ihop då den används på mer än ett ställe.
 
         private static void SaveToContactFile(string lastFileName)
         {
@@ -91,7 +102,7 @@
                         outfile.WriteLine($"{p.persname};{p.surname};{p.phone};{p.address};{p.birthdate}");
                 }
             }
-        }
+        }//Metod som sparar kontaktlistan till fil
 
         private static void FileLoader(string lastFileName)
         {
@@ -119,7 +130,7 @@
                     }
                 }
             }
-        }
+        }//Metod som laddar upp data från fil.
 
         static string Input(string prompt) //Metod för att korta ner rader med återkommande kod om utskrifter
         {
