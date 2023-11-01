@@ -5,7 +5,8 @@ namespace dtp6_contacts
 {
     class MainClass
     {
-        static Person[] contactList = new Person[100];
+        static bool isSaved = true;
+        static List<Person> contactList = new List<Person>();
         class Person
         {
             public string persname, surname, phone, address, birthdate;
@@ -20,7 +21,6 @@ namespace dtp6_contacts
         }
         public static void Main(string[] args)
         {
-            
             string lastFileName = "address.lis";
             string[] commandLine;
             Console.WriteLine("Hello and welcome to the contact list");
@@ -30,21 +30,24 @@ namespace dtp6_contacts
                 commandLine = Input("> ").Split(' ');
                 if (commandLine[0] == "quit")
                 {
-                    // NYI!
-                    Console.WriteLine("Not yet implemented: safe quit");
+                    Console.WriteLine("Do you want to save before qutting?");
+                    string saveFile = Console.ReadLine();
+                    if (saveFile == "yes")
+                    {
+                        SaveToContactFile(lastFileName);
+                    }
                 }
                 //NYI New Person, skapar person med namn
-
-
-                //NYI List Person, skriv ut personer med samma namn-
-
-                //NYI Delete Person, ska ta bort en person från listan.
-
-                //NYI Save File, spara listan på angiven fil.
-                //NYI Safe Quit, om filen inte är sparad, ska programmet fråga om spara innan avslut.
                 else if (commandLine[0] == "list")
                 {
-                    PrintList();
+                    if (commandLine.Length == 1)
+                    {
+                        PrintList();
+                    }
+                    else
+                    {
+                        PrintPerson();
+                    }
                 }
                 else if (commandLine[0] == "load")
                 {
@@ -62,8 +65,6 @@ namespace dtp6_contacts
                     }
                     else
                     {
-                        // NYI!
-                        Console.WriteLine("Not yet implemented: save /file/");
                         lastFileName = commandLine[1];
                         SaveToContactFile(lastFileName);
                     }
@@ -91,58 +92,75 @@ namespace dtp6_contacts
             } while (commandLine[0] != "quit"); //Här avbryts REPL, programmet stängs av.
         }
 
+        private static void PrintPerson()
+        {
+            Console.WriteLine("Which name do you want print?");
+            string userInput = Console.ReadLine();
+            for (int idx = 0; idx < contactList.Count; idx++)
+            {
+                if (userInput == contactList[idx].persname)
+                {
+                    Console.WriteLine($"{contactList[idx].persname}, {contactList[idx].surname}, " +
+                        $"{contactList[idx].phone}, {contactList[idx].address}, {contactList[idx].birthdate}");
+                }
+            }
+        }
+
         private static void DeleteFunction(string[] commandLine)
         {
             if (commandLine.Length == 1)
             {
-                Array.Clear(contactList);
+                contactList.Clear();
                 Console.WriteLine("The list has now been deleted!");
             }
             else //"Delete person"
             {
                 Console.WriteLine("Type the number of the person you want to delete");
                 int userInput = int.Parse(Console.ReadLine());
-                contactList[userInput] = null;
+                contactList.RemoveAt(userInput);
             }
+            isSaved = false;
         }
 
         private static void EditPerson()
         {
             Console.WriteLine("Enter the number of the person you want to edit");
             int userInput = int.Parse(Console.ReadLine());
+            Person p = contactList[userInput];
             Console.WriteLine("Type the new name, if you don't want to change the name press enter");
             string newName = Console.ReadLine();
             if (newName != "")
             {
-                contactList[userInput].persname = newName;
+                p.persname = newName;
             }
             Console.WriteLine("Type the new surname, if you don't want to change it press enter");
             string newSurname = Console.ReadLine();
             if (newSurname != "")
             {
-                contactList[userInput].surname = newSurname;
+                p.surname = newSurname;
             }
             Console.WriteLine("Type the new phone number, if you don't want to change it press enter");
             string newPhone = Console.ReadLine();
             if (newPhone != "")
             {
-                contactList[userInput].phone = newPhone;
+                p.phone = newPhone;
             }
             Console.WriteLine("Type the new address, if you don't want to change it press enter");
             string newAddress = Console.ReadLine();
             if (newAddress != "")
             {
-                contactList[userInput].address = newAddress;
+                p.address = newAddress;
             }
+            isSaved = false;
         }
 
         static void PrintList()
         {
-            for (int i = 0; i < contactList.Length; i++)
+            int idx = 0;
+            foreach (var p in contactList)
             {
-                Person p = contactList[i];
-                if (p != null)
-                Console.WriteLine($"{i}. {p.persname}, {p.surname}, {p.phone}, {p.address}, {p.birthdate}");
+                Console.WriteLine($"{idx}. {p.persname}, {p.surname}, {p.phone}, {p.address}, {p.birthdate}");
+                idx++;
             }
         }//Metod för att printa ut listan.
         static void MenuPrinter()
@@ -172,6 +190,7 @@ namespace dtp6_contacts
                         outfile.WriteLine($"{p.persname};{p.surname};{p.phone};{p.address};{p.birthdate}");
                 }
             }
+            isSaved = false;
         }//Metod som sparar kontaktlistan till fil
 
         private static void FileLoader(string lastFileName)
@@ -192,16 +211,10 @@ namespace dtp6_contacts
                     p.address = addresses[0];
                     string[] birthdate = attrs[4].Split(";");
                     p.birthdate = birthdate[0];
-                    for (int ix = 0; ix < contactList.Length; ix++)
-                    {
-                        if (contactList[ix] == null)
-                        {
-                            contactList[ix] = p;
-                            break;
-                        }
-                    }
+                    contactList.Add(p);
                 }
             }
+            isSaved = false;
         }//Metod som laddar upp data från fil.
 
         static string Input(string prompt) //Metod för att korta ner rader med återkommande kod om utskrifter
@@ -219,21 +232,14 @@ namespace dtp6_contacts
                 string phone = Input("Phone: ");
                 string address = Input("Address: ");
                 string birthdate = Input("Birthdate: ");
-                Person p = new Person(persname, surname, phone, address, birthdate);
-                for (int idx = 0; idx < contactList.Length; idx++)
-                {
-                    if (contactList[idx] == null)
-                    {
-                        contactList[idx] = p;
-                        break;
-                    }
-                }
-            } 
+                contactList.Add(new Person(persname, surname, phone, address, birthdate));
+            }
             else
             {
                 // NYI!
                 Console.WriteLine("Not yet implemented: new /person/");
             }
+            isSaved = false;
         }//En metod för att lägga till en ny kontakt
 
 
