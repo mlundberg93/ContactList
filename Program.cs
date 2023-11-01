@@ -31,11 +31,25 @@
                 //NYI Safe Quit, om filen inte är sparad, ska programmet fråga om spara innan avslut.
                 else if (commandLine[0] == "load")
                 {
-                    lastFileName = LoadFile(commandLine);
+                    if (commandLine.Length < 2)
+                        lastFileName = "address.lis";
+                    else
+                        lastFileName = commandLine[1];
+                    FileLoader(lastFileName);
                 }
                 else if (commandLine[0] == "save")
                 {
-                    SaveFunction(lastFileName, commandLine);
+                    if (commandLine.Length < 2)
+                    {
+                        SaveToContactFile(lastFileName);
+                    }
+                    else
+                    {
+                        // NYI!
+                        Console.WriteLine("Not yet implemented: save /file/");
+                        lastFileName = commandLine[1];
+                        SaveToContactFile(lastFileName);
+                    }
                 }
                 else if (commandLine[0] == "new")
                 {
@@ -64,26 +78,49 @@
                 Console.WriteLine();
             } //En metod för att samla ihop då den används på mer än ett ställe.
 
-            static void SaveFunction(string lastFileName, string[] commandLine) 
+
+        }
+
+        private static void SaveToContactFile(string lastFileName)
+        {
+            using (StreamWriter outfile = new StreamWriter(lastFileName))
             {
-                if (commandLine.Length < 2)
+                foreach (Person p in contactList)
                 {
-                    using (StreamWriter outfile = new StreamWriter(lastFileName))
+                    if (p != null)
+                        outfile.WriteLine($"{p.persname};{p.surname};{p.phone};{p.address};{p.birthdate}");
+                }
+            }
+        }
+
+        private static void FileLoader(string lastFileName)
+        {
+            using (StreamReader infile = new StreamReader(lastFileName))  //TODO felhantering vid fel filnamn
+            {
+                string line;
+                while ((line = infile.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                    string[] attrs = line.Split('|');
+                    Person p = new Person();
+                    p.persname = attrs[0];
+                    p.surname = attrs[1];
+                    string[] phones = attrs[2].Split(';');
+                    p.phone = phones[0];
+                    string[] addresses = attrs[3].Split(';');
+                    p.address = addresses[0];
+                    for (int ix = 0; ix < contactList.Length; ix++)
                     {
-                        foreach (Person p in contactList)
+                        if (contactList[ix] == null)
                         {
-                            if (p != null)
-                                outfile.WriteLine($"{p.persname};{p.surname};{p.phone};{p.address};{p.birthdate}");
+                            contactList[ix] = p;
+                            break;
                         }
                     }
                 }
-                else
-                {
-                    // NYI!
-                    Console.WriteLine("Not yet implemented: save /file/");
-                }
-            }//En metod för att spara kontaktlistan
+            }
         }
+
         static string Input(string prompt) //Metod för att korta ner rader med återkommande kod om utskrifter
         {
             Console.Write(prompt);
@@ -105,78 +142,6 @@
             }
         }//En metod för att lägga till en ny kontakt
 
-        private static string LoadFile(string[] commandLine)
-        {
-            string lastFileName;
-            if (commandLine.Length < 2)
-            {
-                lastFileName = "address.lis";
 
-
-                using (StreamReader infile = new StreamReader(lastFileName))  //TODO felhantering vid fel filnamn
-                {
-                    string line;
-                    while ((line = infile.ReadLine()) != null)
-                    {
-                        Console.WriteLine(line);
-                        string[] attrs = line.Split('|');
-                        Person p = new Person();
-                        p.persname = attrs[0];
-                        p.surname = attrs[1];
-                        string[] phones = attrs[2].Split(';');
-                        p.phone = phones[0];
-                        string[] addresses = attrs[3].Split(';');
-                        p.address = addresses[0];
-                        for (int ix = 0; ix < contactList.Length; ix++)
-                        {
-                            if (contactList[ix] == null)
-                            {
-                                contactList[ix] = p;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-            }
-            else
-            {
-                lastFileName = commandLine[1];
-                try
-                {
-                    using (StreamReader infile = new StreamReader(lastFileName))
-                    {
-                        string line;
-                        while ((line = infile.ReadLine()) != null)
-                        {
-                            Console.WriteLine(line);
-                            string[] attrs = line.Split('|');
-                            Person p = new Person();
-                            p.persname = attrs[0];
-                            p.surname = attrs[1];
-                            string[] phones = attrs[2].Split(';');
-                            p.phone = phones[0];
-                            string[] addresses = attrs[3].Split(';');
-                            p.address = addresses[0];
-                            for (int ix = 0; ix < contactList.Length; ix++)
-                            {
-                                if (contactList[ix] == null)
-                                {
-                                    contactList[ix] = p;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (System.IO.FileNotFoundException exc)
-                {
-                    Console.WriteLine(exc.Message);
-                }
-
-            }
-
-            return lastFileName;
-        }//En metod för att ladda in listan till programmet.
     }
 }
