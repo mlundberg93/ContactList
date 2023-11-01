@@ -1,4 +1,6 @@
-﻿namespace dtp6_contacts
+﻿using System.ComponentModel;
+
+namespace dtp6_contacts
 {
     class MainClass
     {
@@ -6,9 +8,18 @@
         class Person
         {
             public string persname, surname, phone, address, birthdate;
+            public Person(string persname, string surname, string phone, string address, string birthdate)
+            {
+                this.persname = persname; this.surname = surname; this.phone = phone; this.address = address; this.birthdate = birthdate;
+            }
+            public Person()
+            {
+
+            }
         }
         public static void Main(string[] args)
         {
+            
             string lastFileName = "address.lis";
             string[] commandLine;
             Console.WriteLine("Hello and welcome to the contact list");
@@ -22,6 +33,7 @@
                     Console.WriteLine("Not yet implemented: safe quit");
                 }
                 //NYI New Person, skapar person med namn
+
 
                 //NYI List Person, skriv ut personer med samma namn-
                 //NYI Delete, ska rensa hela listan.
@@ -120,6 +132,8 @@
                     p.phone = phones[0];
                     string[] addresses = attrs[3].Split(';');
                     p.address = addresses[0];
+                    string[] birthdate = attrs[4].Split(";");
+                    p.birthdate = birthdate[0];
                     for (int ix = 0; ix < contactList.Length; ix++)
                     {
                         if (contactList[ix] == null)
@@ -145,7 +159,18 @@
                 string persname = Input("Personal name: ");
                 string surname = Input("Surname: ");
                 string phone = Input("Phone: ");
-            } //NYI: Lägg till i telefon listan
+                string address = Input("Address: ");
+                string birthdate = Input("Birthdate: ");
+                Person p = new Person(persname, surname, phone, address, birthdate);
+                for (int idx = 0; idx < contactList.Length; idx++)
+                {
+                    if (contactList[idx] == null)
+                    {
+                        contactList[idx] = p;
+                        break;
+                    }
+                }
+            } 
             else
             {
                 // NYI!
