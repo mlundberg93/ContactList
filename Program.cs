@@ -104,7 +104,7 @@ namespace dtp6_contacts
                         $"{contactList[idx].phone}, {contactList[idx].address}, {contactList[idx].birthdate}");
                 }
             }
-        }
+        }//Metod för att printa ut ett specifikt namn
 
         private static void DeleteFunction(string[] commandLine)
         {
@@ -120,7 +120,7 @@ namespace dtp6_contacts
                 contactList.RemoveAt(userInput);
             }
             isSaved = false;
-        }
+        }//Metod för att ta bort personer från listan
 
         private static void EditPerson()
         {
@@ -152,7 +152,7 @@ namespace dtp6_contacts
                 p.address = newAddress;
             }
             isSaved = false;
-        }
+        }//Metod för att redigera personer i listan
 
         static void PrintList()
         {
